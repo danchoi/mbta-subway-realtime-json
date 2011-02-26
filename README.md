@@ -9,15 +9,18 @@ This script was written for the [Open Civic Data][ocd] project.
 ## Demonstration Feed
 
 <http://openmbta.org/ocd/subway_predictions.json>
+<http://openmbta.org/ocd/train_locations.json>
 
 ## Usage
 
-    ruby subway_predictions.rb  > subway_predictions.json
+    ruby geo_subway_stops.rb
 
-Run this on cron every x minutes.
+    ruby subway_predictions.rb  
+    ruby train_locations.rb
 
+Run the latter two on cron every x minutes.
 
-## Response Format
+## Predictions Response Format
     [
       {
         "line": "Red",
@@ -27,21 +30,15 @@ Run this on cron every x minutes.
             "predictions": [
               {
                 "name": "Quincy Adams Station",
-                "code1": "place-qamnl",
-                "code2": "RQUAS",
                 "status": "Arrived",
                 "time": "2011-02-26T16:23:59+00:00",
-                "offset": "-00:03:04",
                 "type": "Revenue",
                 "route": "Braintree Branch"
               },
               {
                 "name": "Braintree Station",
-                "code1": "place-brntn",
-                "code2": "RBRAS",
                 "status": "Predicted",
                 "time": "2011-02-26T16:28:00+00:00",
-                "offset": "00:00:56",
                 "type": "Revenue",
                 "route": "Braintree Branch"
               }
@@ -57,17 +54,37 @@ Run this on cron every x minutes.
             "predictions": [
               {
                 "name": "Bowdoin Station",
-                "code1": "place-bomnl",
-                "code2": "BBOWW",
                 "status": "Arrived",
                 "time": "2011-02-26T16:19:51+00:00",
-                "offset": "-00:07:08",
                 "type": "Revenue",
                 "route": "0"
               }
             ]
           },
         ...
+
+## Locations Response Format
+
+    {
+      "Red": [
+        {
+          "left": {
+            "name": "Quincy Adams Station",
+            "time": "2011-02-26 13:32:39 -0500",
+            "geo": [
+              -71.006839,
+              42.23334
+            ]
+          },
+          "arriving": {
+            "name": "Braintree Station",
+            "time": "2011-02-26 13:36:53 -0500",
+            "geo": [
+              -71.001601,
+              42.207411
+            ]
+          }
+        },
 
 ## References
 
@@ -76,8 +93,5 @@ Run this on cron every x minutes.
 <http://developer.mbta.com/RT_Archive/DataExplained.txt>
 
 <http://developer.mbta.com/RT_Archive/RealTimeHeavyRailKeys.csv>
-
-
-
 
 
