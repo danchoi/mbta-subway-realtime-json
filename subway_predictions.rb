@@ -77,7 +77,7 @@ res = File.readlines("subway.csv").
       }
     }
 
-File.open("subway_predictions.yaml", "w")  {|f| f.puts res.to_yaml}
+File.open("subway_predictions.yml", "w")  {|f| f.puts res.to_yaml}
 File.open("subway_predictions.json", "w")  {|f| f.puts res.to_json}
 
 

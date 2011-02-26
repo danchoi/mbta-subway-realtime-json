@@ -12,12 +12,10 @@ r = res['features'].map do |x|
   station = x['properties']['properties']['STATION']
   {'geo' => geo, 'line' => line, 'station' => station}
 end
-s = r.group_by {|x| x['line']}.map {|line, stops|
-  {'line' => line,
-    'stops' => stops.map {|x| 
-      [x['station'], x['geo']].flatten
-    }
-  }
+s = {}
+r.group_by {|x| x['line']}.each {|line, stops|
+  s[line] = stops.map {|x| [x['station'], x['geo']].flatten }
+
 }
 
 File.open("geo_subway_stops.yml", 'w') {|f| f.puts s.to_yaml}
