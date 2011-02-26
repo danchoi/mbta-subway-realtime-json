@@ -8,8 +8,13 @@ This script was written for the [Open Civic Data][ocd] project.
 
 ## Demonstration Feed
 
-<http://openmbta.org/ocd/subway_predictions.json>
-<http://openmbta.org/ocd/train_locations.json>
+Predictions:
+
+* <http://openmbta.org/ocd/subway_predictions.json>
+
+To estimate train positions:
+
+* <http://openmbta.org/ocd/train_locations.json>
 
 ## Usage
 
