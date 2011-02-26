@@ -76,11 +76,9 @@ res = File.readlines("subway.csv").
         }
       }
     }
-if ARGV.first  == '-y'
-  File.open("subway_predictions.yaml", "w")  {|f| f.puts res.to_yaml}
-else
-  File.open("subway_predictions.json", "w")  {|f| f.puts res.to_json}
-end
+
+File.open("subway_predictions.yaml", "w")  {|f| f.puts res.to_yaml}
+File.open("subway_predictions.json", "w")  {|f| f.puts res.to_json}
 
 
 
