@@ -59,6 +59,7 @@ end
 
 
 File.open("train_locations.yml", 'w') {|f| f.puts r.to_yaml}
+File.open("train_locations.json", "w")  {|f| f.puts r.to_json}
 
 
 
