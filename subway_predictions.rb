@@ -66,8 +66,10 @@ res = File.readlines("subway.csv").
       :trips => x.map {|z| z[1..-1]}.
         group_by {|x| x[0].to_i}.
         map {|trip_id, x| 
-          {:trip_id => trip_id, :predictions => x.map {|a| a[1..-1]}.map {|y| fmt_prediction(line, y) } }
-        }.sort_by {|stop| stop['time']}
+          {:trip_id => trip_id, :predictions => x.
+            map {|a| a[1..-1]}.map {|y| fmt_prediction(line, y) }.
+            sort_by {|stop| stop['time']}}
+        }
       }
     }
 if ARGV.first  == '-y'
