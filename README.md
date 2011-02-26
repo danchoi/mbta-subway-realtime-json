@@ -6,6 +6,15 @@ This script was written for the [Open Civic Data][ocd] project.
 
 [ocd]:http://opencivicdata.org/
 
+# Demonstration Feed
+
+<http://openmbta.org/ocd/subway_predictions.json>
+
+# Usage
+
+    ruby subway_predictions.rb  > subway_predictions.json
+
+Run this on cron every x minutes.
 
 ## References
 
