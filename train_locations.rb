@@ -13,9 +13,33 @@ end
 # associate with lat, lng
 GEO_STOPS = YAML::load(File.open("geo_subway_stops.yml"))
 
+def fix_name(name)
+  name = case name 
+         when /North Station/i
+           name 
+         when  /Massachusetts Ave. Station/
+           "MASSACHUSETTS AVE"
+         when  /State St. Station/
+           "STATE"
+         else
+           name.sub(/ Station$/, '').upcase
+         end
+  name = case name 
+         when /Harvard Square/i
+           'HARVARD'
+         when /Central Square/i
+           'CENTRAL'
+         when /Porter Square/i
+           'PORTER'
+         else
+           name
+         end
+  name.upcase
+end
+
 def geo(line, name)
   x = GEO_STOPS[line.upcase].detect {|x|
-    name.sub(/ Station$/, '').upcase == x[0]
+    fix_name(name) == x[0]
   }
   x ? x[1..-1] : nil
 end

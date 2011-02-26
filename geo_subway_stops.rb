@@ -13,10 +13,18 @@ r = res['features'].map do |x|
   {'geo' => geo, 'line' => line, 'station' => station}
 end
 s = {}
-r.group_by {|x| x['line']}.each {|line, stops|
-  s[line] = stops.map {|x| [x['station'], x['geo']].flatten }
-
-}
+r.group_by {|x| x['line']}.
+  # select {|line, stops| line.split("/").size == 1}.
+  each {|line, stops|
+    s[line] = stops.map {|x| [x['station'], x['geo']].flatten }
+  }
+r.group_by {|x| x['line']}.
+  select {|line, stops| line.split("/").size == 2}.
+  each {|line, stops|
+    line.split("/").each do |x|
+      s[x] += stops.map {|x| [x['station'], x['geo']].flatten }
+    end
+  }  
 
 File.open("geo_subway_stops.yml", 'w') {|f| f.puts s.to_yaml}
 
