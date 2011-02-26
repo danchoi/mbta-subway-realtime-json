@@ -57,25 +57,25 @@ rescue
   STDERR.puts time, $!
 end
 
-%W{ red blue orange}.each do |x|
-  res = File.readlines("#{x}.csv").
-    map {|x| CSV.parse_line(x) }.
-    map {|x| add_stop_name(x) }.
-    group_by {|x| x[0]}.map {|line, x| 
-      { :line => line,
-        :trips => x.map {|z| z[1..-1]}.
-          group_by {|x| x[0].to_i}.
-          map {|trip_id, x| 
-            {:trip_id => trip_id, :predictions => x.map {|a| a[1..-1]}.map {|y| fmt_prediction(line, y) } }
-          }.sort_by {|stop| stop['time']}
-        }
+
+res = File.readlines("subway.csv").
+  map {|x| CSV.parse_line(x) }.
+  map {|x| add_stop_name(x) }.
+  group_by {|x| x[0]}.map {|line, x| 
+    { :line => line,
+      :trips => x.map {|z| z[1..-1]}.
+        group_by {|x| x[0].to_i}.
+        map {|trip_id, x| 
+          {:trip_id => trip_id, :predictions => x.map {|a| a[1..-1]}.map {|y| fmt_prediction(line, y) } }
+        }.sort_by {|stop| stop['time']}
       }
-  if ARGV.first  == '-y'
-    puts res.to_yaml
-  else
-    puts res.to_json
-  end
+    }
+if ARGV.first  == '-y'
+  puts res.to_yaml
+else
+  puts res.to_json
 end
+
 
 
 __END__
