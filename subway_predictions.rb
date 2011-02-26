@@ -34,7 +34,7 @@ end
 
 def fmt_prediction(line, a)
   r = {}
-  %w{ name code1 code2 status time offset type route }.each_with_index do |f, i|
+  %w{ name code1 code2 status time remaining type route }.each_with_index do |f, i|
     r[f] = a[i].strip
   end
   fmt = "%m/%d/%Y %I:%M:%S %p"
@@ -52,6 +52,10 @@ def fmt_prediction(line, a)
                else
                  r['route']
                end
+  r.delete('code1')
+  r.delete('code2')
+  r.delete('remaining')
+  r.delete('type')
   r
 rescue
   STDERR.puts time, $!
