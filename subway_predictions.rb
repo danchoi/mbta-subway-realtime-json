@@ -37,8 +37,8 @@ def fmt_prediction(line, a)
   %w{ name code1 code2 status time remaining type route }.each_with_index do |f, i|
     r[f] = a[i].strip
   end
-  fmt = "%m/%d/%Y %I:%M:%S %p"
-  time = r['time'].
+  fmt = "%m/%d/%Y %I:%M:%S %p %Z"
+  time = "#{r['time']} EDT".
     gsub(/ (\d):/, ' 0\1:'). # correct a single digit hour
     gsub(/^(\d)\//, '0\1/') # correct a single month
 
