@@ -1,4 +1,5 @@
 require 'yaml'
+require 'json'
 # Figure out subway locations
 
 predictions = YAML::load(File.read("subway_predictions.yml"))
