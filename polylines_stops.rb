@@ -22,12 +22,18 @@ polylines.each do |line, segs|
   segs.each do |seg|
     # puts seg.inspect
     seg[:geometry].each do |vertex|
-      puts vertex.inspect
+      # puts vertex.inspect
       key = [ line, vertex[0], vertex[1] ]
       if dict[ key ]
         puts "  Found match for #{dict[key]}"
+        vertex << dict[key]
       end
     end
   end
+  nil
 end
+
+puts "Writing polylines_stops.(yml|json)"
+File.open('polylines_stops.yml', 'w') {|f| f.write polylines.to_yaml}
+File.open('polylines_stops.json', 'w') {|f| f.write polylines.to_json}
 
