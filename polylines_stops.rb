@@ -23,6 +23,7 @@ polylines.each do |line, segs|
     # puts seg.inspect
     seg[:geometry].each do |vertex|
       # puts vertex.inspect
+      puts vertex.inspect
       key = [ line, vertex[0], vertex[1] ]
       if dict[ key ]
         puts "  Found match for #{dict[key]}"
