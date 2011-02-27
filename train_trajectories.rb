@@ -1,6 +1,8 @@
 # this is the main function
 require 'yaml'
 require 'json'
+$:.unshift File.dirname(__FILE__)
+require 'haversine'
 
 locations = YAML::load(File.read('train_locations.yml'))
 polylines = YAML::load(File.read('polylines_stops.yml'))
@@ -44,39 +46,54 @@ def correct_direction(orig, dest, shape)
   end
 end
 
-
 locations.each do |line, trains|
   trains.each do |train|
-    # find the polyline that the train is on
-    x = train[:left]
-    y = train[:arriving]
-    matched_shape = polylines[line.upcase].detect {|shape|
-      shape[:geometry].detect {|vertex| 
-        lat,lng,stop = *vertex 
-        stop == x[:name] ||
-          (lat == x[:geo][0] && lng == x[:geo][1]) || 
-            close(x[:geo], [lat,lng])
-      } && shape[:geometry].detect {|vertex| 
-        lat,lng,stop = *vertex 
-        stop == y[:name] ||
-          (lat == y[:geo][0] && lng == y[:geo][1]) || 
-            close(y[:geo], [lat,lng])
-      } 
-    }
-    trainstr = "#{line} line train"
-    if matched_shape
-      puts "Matched shape for #{trainstr}: #{x[:altname]} -> #{y[:altname]}"
-      # Decorate the location with a trajectory:
-      res = correct_direction(x[:altname], y[:altname], matched_shape)
-      if res
-        train[:trajectory] = res
+    begin
+      # find the polyline that the train is on
+      x = train[:left]
+      y = train[:arriving]
+      matched_shape = polylines[line.upcase].detect {|shape|
+        shape[:geometry].detect {|vertex| 
+          lat,lng,stop = *vertex 
+          stop == x[:name] ||
+            (lat == x[:geo][0] && lng == x[:geo][1]) || 
+              close(x[:geo], [lat,lng])
+        } && shape[:geometry].detect {|vertex| 
+          lat,lng,stop = *vertex 
+          stop == y[:name] ||
+            (lat == y[:geo][0] && lng == y[:geo][1]) || 
+              close(y[:geo], [lat,lng])
+        } 
+      }
+      trainstr = "#{line} line train"
+      if matched_shape
+        puts "Matched shape for #{trainstr}: #{x[:altname]} -> #{y[:altname]}"
+        # Decorate the location with a trajectory:
+        res = correct_direction(x[:altname], y[:altname], matched_shape)
+        if res
+          train[:trajectory] = res
+        end
+      else
+        puts "  # No matched shape for #{trainstr}: #{x[:altname]} -> #{y[:altname]}"
+        train[:error] = "No polyline matched"
       end
-    else
-      puts "  # No matched shape for #{trainstr}: #{x[:altname]} -> #{y[:altname]}"
-      train[:error] = "No polyline matched"
+      train[:interval] = y[:time] - x[:time] 
+      dist = 0
+      train[:trajectory].each_cons(2) {|x, y|
+        lat1,lng1 = *x
+        lat2,lng2 = *y
+        # puts "%s %s => %s %s" % [lat1,lng1, lat2,lng2]
+        dist = haversine_distance( lat1, lng1, lat2, lng2)
+      }
+      train[:distance] =dist
+
+    rescue
+      puts "ERROR for train #{train.inspect}: #{$!}"
     end
   end
 end
+
+
 File.open("train_trajectories.yml", 'w') {|f| f.puts locations.to_yaml}
 File.open("train_trajectories.json", "w")  {|f| f.puts locations.to_json}
 
