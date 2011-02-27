@@ -4,9 +4,10 @@ require 'json'
 
 predictions = YAML::load(File.read("subway_predictions.yml"))
 
-def reduce(hash)
+def reduce(trip_id, hash)
   name = hash['name']
   { 
+    :trip_id => trip_id,
     :name => name,
     :altname => fix_name(name),
     :time => hash[:time.to_s] 
@@ -60,8 +61,8 @@ predictions.each do |line|
     r[line[:line]] = line[:trips].
       select {|t| t[:predictions].size > 1}.
       map { |trip| 
-        left = reduce( trip[:predictions][0] )
-        arr = reduce( trip[:predictions][1] )
+        left = reduce( trip[:trip_id],  trip[:predictions][0] )
+        arr = reduce( trip[:trip_id], trip[:predictions][1] )
         left[:geo] = geo(line[:line], left[:name])
         arr[:geo] = geo(line[:line], arr[:name])
         { :left => left, :arriving => arr }

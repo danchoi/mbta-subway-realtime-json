@@ -39,9 +39,11 @@ polylines.each do |line, segs|
       key = [ line, vertex[0], vertex[1] ]
       if match = dict[ key ]
         puts "  MATCH #{key} => #{match}"
-        vertex << dict[key]
+        if vertex.size == 2
+          vertex << dict[key]
+          matched << match 
+        end
         # flag this key as aleady matched
-        matched << match 
       end
     end
   end
@@ -55,8 +57,10 @@ polylines.each do |line, segs|
         if close([lat, lng], [ vertex[0], vertex[1] ] )
           # TODO fix later to get closest match
           puts "  CLOSE match #{key} => #{value.inspect}"
-          vertex << value
-          matched << value
+          if vertex.size == 2
+            vertex << value
+            matched << value
+          end
         end
       end
     end
@@ -68,4 +72,16 @@ end
 puts "Writing polylines_stops.(yml|json)"
 File.open('polylines_stops.yml', 'w') {|f| f.write polylines.to_yaml}
 File.open('polylines_stops.json', 'w') {|f| f.write polylines.to_json}
+
+File.open('polylines_stops.json', 'w') {|f| 
+  polylines.each do | line, shapes |
+    puts line
+    shapes.each do |s|
+      puts "  " + s[:geometry].select {|x| x.size > 2}.map {|x| x[2]}.inspect
+    end
+  end
+
+}
+
+
 
