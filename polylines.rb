@@ -11,7 +11,7 @@ res["features"].each do |f|
     puts "flattening extra nested array"
     g = g.flatten(1)
   end
-  (r[p["LINE"]] ||= []) << {:shape => p["Shape_len"], :geometry => g}
+  (r[p["LINE"]] ||= []) << {:shape_len => p["Shape_len"], :geometry => g}
 end
 File.open('polylines.yml', 'w') {|f| f.write r.to_yaml}
 File.open('polylines.json', 'w') {|f| f.write r.to_json}
