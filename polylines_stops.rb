@@ -50,7 +50,7 @@ polylines.each do |line, segs|
             # TODO fix later to get closest match
             puts "  CLOSE match #{key} => #{value.inspect}"
             vertex << value
-            matched << match 
+            matched << value
           else
             #puts "  No match found"
           end
