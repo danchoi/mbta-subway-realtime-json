@@ -1,5 +1,6 @@
 # this is the main function
 require 'yaml'
+require 'json'
 
 locations = YAML::load(File.read('train_locations.yml'))
 polylines = YAML::load(File.read('polylines_stops.yml'))
@@ -23,14 +24,17 @@ locations.each do |line, trains|
         lat == x[:geo][0] && lng == x[:geo][1] || close(x[:geo], [lat,lng])
       }
     }
-    train = "#{line} train"
+    trainstr = "#{line} line train"
     if matched_shape
-      puts "Matched shape for #{train} that left #{x[:name]}"
+      puts "Matched shape for #{trainstr} that left #{x[:name]}"
+
+      # Decorate the location with a trajectory:
+      train[:trajectory] = matched_shape
     else
-      puts "# No matched shape for #{train} that left #{x[:name]}"
+      puts "# No matched shape for #{trainstr} that left #{x[:name]}"
     end
   end
 end
-
-nil
+File.open("train_locations_trajectories.yml", 'w') {|f| f.puts locations.to_yaml}
+File.open("train_locations_trajectories.json", "w")  {|f| f.puts locations.to_json}
 
