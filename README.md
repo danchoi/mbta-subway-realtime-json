@@ -19,6 +19,7 @@ To estimate train positions:
 ## Usage
 
     ruby geo_subway_stops.rb
+    ruby polylines.rb
 
     ruby subway_predictions.rb  
     ruby train_locations.rb
