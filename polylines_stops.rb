@@ -42,22 +42,26 @@ polylines.each do |line, segs|
         vertex << dict[key]
         # flag this key as aleady matched
         matched << match 
-      else # find close match
-        # puts "  No exact match for #{key}. Trying to find closest."
-        dict.select {|k,v|  ! matched.include?(v)  }.each do |k, value|
-          stop, lat, lng = *k
-          if close([lat, lng], [ vertex[0], vertex[1] ] )
-            # TODO fix later to get closest match
-            puts "  CLOSE match #{key} => #{value.inspect}"
-            vertex << value
-            matched << value
-          else
-            #puts "  No match found"
-          end
+      end
+    end
+  end
+  segs.each do |seg|
+    # puts "  No exact match for #{key}. Trying to find closest."
+    seg[:geometry].each do |vertex|
+      key = [ line, vertex[0], vertex[1] ]
+      dict.each do |k, value|
+        next if matched.include?(value)
+        stop, lat, lng = *k
+        if close([lat, lng], [ vertex[0], vertex[1] ] )
+          # TODO fix later to get closest match
+          puts "  CLOSE match #{key} => #{value.inspect}"
+          vertex << value
+          matched << value
         end
       end
     end
   end
+
   nil
 end
 
