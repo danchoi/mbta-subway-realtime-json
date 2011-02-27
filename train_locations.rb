@@ -5,8 +5,10 @@ require 'json'
 predictions = YAML::load(File.read("subway_predictions.yml"))
 
 def reduce(hash)
+  name = hash['name']
   { 
-    :name => hash[:name.to_s],
+    :name => name,
+    :altname => fix_name(name),
     :time => hash[:time.to_s] 
   }
 end
@@ -45,10 +47,12 @@ def geo(line, name)
     fixed_name == x[0] ||
       # match first word; NOT SURE IF THIS WILL PRODUCE FALSE MATCHES
       fixed_name.split(' ')[0] == x[0].split(' ')[0]
-
-
   }
-  x ? x[1..-1] : nil
+  if x
+    x[1..-1]
+  else
+    nil
+  end
 end
 
 r = {}
