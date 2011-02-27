@@ -65,7 +65,10 @@ predictions.each do |line|
         arr = reduce( trip[:trip_id], trip[:predictions][1] )
         left[:geo] = geo(line[:line], left[:name])
         arr[:geo] = geo(line[:line], arr[:name])
-        { :trip_id => left[:trip_id], :left => left, :arriving => arr }
+        { :trip_id => left[:trip_id], 
+          :dest => trip[:predictions][-1],
+          :left => left, 
+          :arriving => arr }
       }
 end
 
