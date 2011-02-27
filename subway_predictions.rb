@@ -38,7 +38,7 @@ def fmt_prediction(line, a)
     r[f] = a[i].strip
   end
   fmt = "%m/%d/%Y %I:%M:%S %p %Z"
-  time = "#{r['time']} EDT".
+  time = "#{r['time']} EST".
     gsub(/ (\d):/, ' 0\1:'). # correct a single digit hour
     gsub(/^(\d)\//, '0\1/') # correct a single month
 
