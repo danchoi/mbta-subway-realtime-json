@@ -16,7 +16,7 @@ GEO_STOPS = YAML::load(File.open("geo_subway_stops.yml"))
 
 def fix_name(name)
   name = case name 
-         when /North Station/i
+         when /^North Station/i, /^South Station/i
            name 
          when  /Massachusetts Ave. Station/
            "MASSACHUSETTS AVE"
@@ -26,11 +26,11 @@ def fix_name(name)
            name.sub(/ Station$/, '').upcase
          end
   name = case name 
-         when /Harvard Square/i
+         when /HARVARD SQUARE/i
            'HARVARD'
-         when /Central Square/i
+         when /CENTRAL SQUARE/i
            'CENTRAL'
-         when /Porter Square/i
+         when /PORTER SQUARE/i
            'PORTER'
          else
            name
@@ -38,9 +38,15 @@ def fix_name(name)
   name.upcase
 end
 
+# MATCHING
 def geo(line, name)
   x = GEO_STOPS[line.upcase].detect {|x|
-    fix_name(name) == x[0]
+    fixed_name = fix_name(name)
+    fixed_name == x[0] ||
+      # match first word; NOT SURE IF THIS WILL PRODUCE FALSE MATCHES
+      fixed_name.split(' ')[0] == x[0].split(' ')[0]
+
+
   }
   x ? x[1..-1] : nil
 end
